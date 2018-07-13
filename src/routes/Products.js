@@ -4,17 +4,11 @@ import ProductList from '../components/ProductList';
 import styles from './products.css'
 
 
-const Products = ({dispatch}) => {
-    function handleDelete(id) {
-        dispatch({
-            type: 'products/delete',
-            payload: id
-        })
-    }
+const Products = () => {
     return (
         <div className={styles.wrapper}>
             <h2>List of Products</h2>
-            <ProductList onDelete={handleDelete}/>
+            <ProductList/>
         </div>
     )
 }

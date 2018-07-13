@@ -30,7 +30,9 @@ export default {
             return {...state, list, total, page};
         },
         'delete'(state, { payload: id }) {
-            return state.filter(item => item.id !== id);
+            const list = state.list.filter(item => item.id !== id)
+            state.list = [...list];
+            return {...state};
         }
     },
     subscriptions: {

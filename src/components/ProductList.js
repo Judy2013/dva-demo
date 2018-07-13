@@ -6,7 +6,7 @@ import { routerRedux } from 'dva/router';
 import { Table, Popconfirm, Pagination, Button } from 'antd';
 import CONSTANTS from '../constants'
 
-const ProductList = ({ dispatch, onDelete, list: datasource, loading, total, page: current }) => {
+const ProductList = ({ dispatch, list: datasource, loading, total, page: current }) => {
     const columns = [
         {
             title: 'Name',
@@ -24,7 +24,7 @@ const ProductList = ({ dispatch, onDelete, list: datasource, loading, total, pag
             title: 'Actions',
             render: (text, record) => {
                 return (
-                    <Popconfirm title='title?' onConfirm={() => onDelete(record.id)}>
+                    <Popconfirm title='title?' onConfirm={() => handleDelete(record.id)}>
                         <Button>Delete</Button>
                     </Popconfirm>
                 )
@@ -36,6 +36,12 @@ const ProductList = ({ dispatch, onDelete, list: datasource, loading, total, pag
             pathname: '/products',
             search: stringify({ page })
         }))
+    }
+    function handleDelete(id) {
+        dispatch({
+            type: 'products/delete',
+            payload: id
+        })
     }
     return (
         <div>
@@ -57,7 +63,6 @@ const ProductList = ({ dispatch, onDelete, list: datasource, loading, total, pag
 }
 
 ProductList.propTypes = {
-    onDelete: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
