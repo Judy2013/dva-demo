@@ -30,6 +30,7 @@ export default {
             return {...state, list, total, page};
         },
         'delete'(state, { payload: id }) {
+            if(!id) return;
             const list = state.list.filter(item => item.id !== id)
             state.list = [...list];
             return {...state};

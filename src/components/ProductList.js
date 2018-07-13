@@ -46,6 +46,7 @@ const ProductList = ({ dispatch, list: datasource, loading, total, page: current
     return (
         <div>
             <Table
+                pagination={false}
                 dataSource={datasource}
                 columns={columns}
                 loading={loading}
