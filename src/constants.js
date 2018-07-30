@@ -1,3 +1,3 @@
 export default {
-    PAGE_SIZE: 3
+    PAGE_SIZE: 10
 }

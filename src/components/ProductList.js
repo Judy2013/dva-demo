@@ -1,12 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { stringify } from 'qs';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { Table, Popconfirm, Pagination, Button } from 'antd';
-import CONSTANTS from '../constants'
+import { Table, Popconfirm, Button } from 'antd';
 
-const ProductList = ({ dispatch, list: datasource, loading, total, page: current }) => {
+const ProductList = ({ dispatch, records: datasource, loading, total, current }) => {
     const columns = [
         {
             title: 'Name',
@@ -31,10 +29,10 @@ const ProductList = ({ dispatch, list: datasource, loading, total, page: current
             }
         }
     ]
-    function pageChangeHandler(page) {
+    function pageChangeHandler(current) {
         dispatch(routerRedux.push({
             pathname: '/products',
-            search: stringify({ page })
+            search: stringify({ current })
         }))
     }
     function handleDelete(id) {
@@ -43,21 +41,19 @@ const ProductList = ({ dispatch, list: datasource, loading, total, page: current
             payload: id
         })
     }
+    const paginationObj = {
+        total,
+        current,
+        onChange: pageChangeHandler
+    }
     return (
         <div>
             <Table
-                pagination={false}
+                pagination={paginationObj}
                 dataSource={datasource}
                 columns={columns}
                 loading={loading}
                 rowKey={record => record.id}
-            />
-            <Pagination
-            className="ant-table-pagination"
-            total={total}
-            current={current}
-            pageSize={CONSTANTS.PAGE_SIZE}
-            onChange={pageChangeHandler}
             />
         </div>
     )
@@ -67,11 +63,11 @@ ProductList.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-    const { list, total, page } = state.products
+    const { records, total, current } = state.products
     return {
-        list,
+        records,
         total,
-        page,
+        current,
         loading: state.loading.models.products
     }
 }

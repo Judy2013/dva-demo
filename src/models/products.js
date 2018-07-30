@@ -1,23 +1,26 @@
 import * as Api from '../services/products';
 import queryString from 'query-string';
+import CONSTANTS from '../constants'
 
 export default {
     namespace: 'products',
     state: {
-        list: [],
+        records: [],
         total: null,
-        page: null
+        size: null,
+        current: null
     },
     effects: {
-        *query({ payload: {page = 1} }, { call, put }) {
+        *query({ payload: {current = 1, size = CONSTANTS.PAGE_SIZE} }, { call, put }) {
             try {
-                const { data } = yield call(Api.getProductList, page)
+                const { records, total } = yield call(Api.getProductList, {current, size})
                 yield put({
                     type: 'save', 
                     payload: { 
-                        data, 
-                        page: parseInt(page, 10), 
-                        total: parseInt(data.length, 10)
+                        records: records || [], 
+                        size,
+                        current: parseInt(current, 10), 
+                        total
                     }
                 })
             } catch (error) {
@@ -26,13 +29,13 @@ export default {
         }
     },
     reducers: {
-        save(state, { payload: { data: list, page, total } }) {
-            return {...state, list, total, page};
+        save(state, { payload: { records, current, total, size } }) {
+            return {...state, records, total, current, size};
         },
         'delete'(state, { payload: id }) {
             if(!id) return;
-            const list = state.list.filter(item => item.id !== id)
-            state.list = [...list];
+            const records = state.records.filter(item => item.id !== id)
+            state.records = [...records];
             return {...state};
         }
     },
@@ -43,7 +46,10 @@ export default {
                     const query = queryString.parse(search);
                     dispatch({
                         type: 'query',
-                        payload: query
+                        payload: query || {
+                            current: 1,
+                            size: 10
+                        }
                     })
                 }
             })

@@ -1,6 +1,5 @@
 import request from '../utils/request';
-import CONSTANTS from '../constants'
 
-export function getProductList(page) {
-    return request(`/api/products/getList?_page=${page}&_limit=${CONSTANTS.PAGE_SIZE}`);
+export async function getProductList(query) {
+    return request(`/api/products/getList?current=${query.current}&size=${query.size}`);
 }
